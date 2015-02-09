@@ -15,8 +15,9 @@ my $dbh = DBI -> connect("dbi:Oracle:", 'meta', 'meta') or die;
 
 create_directories();
 
-error_messages();
-dynamic_performance_views();
+#error_messages();
+#dynamic_performance_views();
+execution_plan_operations();
 
 sub error_messages { # {{{
 
@@ -67,7 +68,6 @@ sub error_messages { # {{{
     }
     
 } # }}}
-
 
 sub dynamic_performance_views { # {{{
 
@@ -129,6 +129,144 @@ sub dynamic_performance_views { # {{{
     
 } # }}}
 
+sub execution_plan_operations { # {{{
+  execution_plan_operation('and-equal'               , ''                      );
+  
+  execution_plan_operation('bitmap'                  , 'index'                 );
+  execution_plan_operation('bitmap'                  , 'merge'                 );
+  execution_plan_operation('bitmap'                  , 'minus'                 );
+  execution_plan_operation('bitmap'                  , 'or'                    );
+  execution_plan_operation('bitmap'                  , 'and'                   );
+  execution_plan_operation('bitmap'                  , 'key iteration'         );
+  
+  execution_plan_operation('connect by'              , ''                      );
+  execution_plan_operation('concatenation'           , ''                      );
+  
+  execution_plan_operation('count'                   , ''                      );
+  execution_plan_operation('count'                   , 'stopkey'               );
+  
+  execution_plan_operation('cube scan'               , ''                      );
+  execution_plan_operation('cube scan'               , 'partion outer'         );
+  execution_plan_operation('cube scan'               , 'outer'                 );
+  
+  execution_plan_operation('domain index'            , ''                      );
+  
+  execution_plan_operation('filter'                  , ''                      );
+  execution_plan_operation('first row'               , ''                      );
+  execution_plan_operation('for update'              , ''                      );
+  
+  execution_plan_operation('hash'                    , 'group by'              );
+  execution_plan_operation('hash'                    , 'group by pivot'        );
+  
+  # Join operations
+  execution_plan_operation('hash join'               , ''                      );
+  execution_plan_operation('hash join'               , 'anti'                  );
+  execution_plan_operation('hash join'               , 'semi'                  );
+  execution_plan_operation('hash join'               , 'right anti'            );
+  execution_plan_operation('hash join'               , 'right semi'            );
+  execution_plan_operation('hash join'               , 'outer'                 );
+  execution_plan_operation('hash join'               , 'right outer'           );
+  
+  # Access methods:
+  execution_plan_operation('index'                   , 'unique scan'           );
+  execution_plan_operation('index'                   , 'range scan'            );
+  execution_plan_operation('index'                   , 'range scan descending' );
+  execution_plan_operation('index'                   , 'full scan'             );
+  execution_plan_operation('index'                   , 'full scan descending'  );
+  execution_plan_operation('index'                   , 'fast full scan'        );
+  execution_plan_operation('index'                   , 'skip scan'             );
+  
+  execution_plan_operation('inlist iterator'         , ''                      );
+  execution_plan_operation('intersection'            , ''                      );
+  
+  execution_plan_operation('merge join'              , 'outer'                 );
+  execution_plan_operation('merge join'              , 'anti'                  );
+  execution_plan_operation('merge join'              , 'semi'                  );
+  execution_plan_operation('merge join'              , 'cartesian'             );
+  
+  # Access methods:
+  execution_plan_operation('mat_view rewrite access' , 'full'                  );
+  execution_plan_operation('mat_view rewrite access' , 'sample'                );
+  execution_plan_operation('mat_view rewrite access' , 'cluster'               );
+  execution_plan_operation('mat_view rewrite access' , 'hash'                  );
+  execution_plan_operation('mat_view rewrite access' , 'by rowid range'        );
+  execution_plan_operation('mat_view rewrite access' , 'sample by rowid range' );
+  execution_plan_operation('mat_view rewrite access' , 'by user rowid'         );
+  execution_plan_operation('mat_view rewrite access' , 'by index rowid'        );
+  execution_plan_operation('mat_view rewrite access' , 'by global index rowid' );
+  execution_plan_operation('mat_view rewrite access' , 'by local index rowid'  );
+  
+  execution_plan_operation('minus'                   , ''                      );
+  
+  # Join operations
+  execution_plan_operation('nested loops'            , ''                      );
+  execution_plan_operation('nested loops'            , 'outer'                 );
+  
+  execution_plan_operation('partition'               , ''                      );
+  execution_plan_operation('partition'               , 'single'                );
+  execution_plan_operation('partition'               , 'iterator'              );
+  execution_plan_operation('partition'               , 'all'                   );
+  execution_plan_operation('partition'               , 'inlist'                );
+  execution_plan_operation('partition'               , 'invalid'               );
+  
+  # Does the following really exist?
+  execution_plan_operation('px iterator'             , 'block,chunk'           );
+  
+  execution_plan_operation('px coordinator'          , ''                      );
+  execution_plan_operation('px_partition'            , ''                      );
+  execution_plan_operation('px receive'              , ''                      );
+  execution_plan_operation('px send'                 , 'qc (random),hash,range');
+  
+  execution_plan_operation('remote'                  , ''                      );
+  execution_plan_operation('sequence'                , ''                      );
+  
+  execution_plan_operation('sort'                    , 'aggregate'             );
+  execution_plan_operation('sort'                    , 'unique'                );
+  execution_plan_operation('sort'                    , 'group by'              );
+  execution_plan_operation('sort'                    , 'group by pivot'        );
+  execution_plan_operation('sort'                    , 'join'                  );
+  execution_plan_operation('sort'                    , 'order by'              );
+  
+  # Access methods:
+  execution_plan_operation('table access'            , 'full'                  );
+  execution_plan_operation('table access'            , 'sample'                );
+  execution_plan_operation('table access'            , 'cluster'               );
+  execution_plan_operation('table access'            , 'hash'                  );
+  execution_plan_operation('table access'            , 'by rowid range'        );
+  execution_plan_operation('table access'            , 'sample by rowid range' );
+  execution_plan_operation('table access'            , 'by user rowid'         );
+  execution_plan_operation('table access'            , 'by index rowid'        );
+  execution_plan_operation('table access'            , 'by global index rowid' );
+  execution_plan_operation('table access'            , 'by local index rowid'  );
+  
+  execution_plan_operation('transpose'               , ''                      );
+  execution_plan_operation('union'                   , ''                      );
+  execution_plan_operation('unpivot'                 , ''                      );
+  execution_plan_operation('view'                    , ''                      );
+} # }}}
+
+sub execution_plan_operation { # {{{
+    my $name_operation = shift;
+    my $name_option    = shift;
+
+    my $name_operation_friendly = filename_friendly_name($name_operation);
+
+    if ($name_option) {
+      mkdir_("../execution-plan-operations/$name_operation_friendly");
+    }
+    else {
+      mkdir_with_README_md("../execution-plan-operations/$name_operation_friendly", $name_operation);
+    }
+
+    if ($name_option) {
+
+      my $name_option_friendly = filename_friendly_name($name_option);
+
+      mkdir_with_README_md("../execution-plan-operations/$name_operation_friendly/$name_option_friendly", "$name_operation - $name_option");
+
+    }
+
+} # }}}
 
 sub filename_friendly_name { # {{{
     my $filename = shift;
@@ -159,25 +297,24 @@ sub filename_friendly_name { # {{{
 
 } # }}}
 
-
 sub create_directories { # {{{
 
     mkdir_ ('..\errors'); 
     mkdir_ ('..\dynamic-performance-views'); 
+    mkdir_ ('..\execution-plan-operations'); 
     
 } # }}}
 
-
-sub mkdir_with_gitignore { # {{{
+sub mkdir_with_README_md { # {{{
 
     my $dirname = shift;
+    my $title   = shift;
 
     mkdir_ ($dirname);
 
-    openL (\my $x, '>', "$dirname\\.gitignore") or die "$dirname\\.gitignore";
-    close $x;
-
-#   touch("$dirname\\.gitignore");
+    open (my $readme, '>', "$dirname/README.md") or die "$dirname/README.md";
+    print $readme "# $title\n" or die;
+    close $readme;
     
 } # }}}
 
